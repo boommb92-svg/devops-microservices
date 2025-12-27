@@ -1,5 +1,5 @@
 image:
-  registry: gcr.io/YOUR_PROJECT_ID
+  registry: docker.io/pavanyennu
   tag: latest
 
 replicas:
