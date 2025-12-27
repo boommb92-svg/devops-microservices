@@ -11,4 +11,4 @@ service:
   type: NodePort   # LoadBalancer for GKE
 
 gcp:
-  projectId: YOUR_PROJECT_ID
+  projectId: pavan-477919
