@@ -2,8 +2,8 @@ pipeline {
   agent any
 
   environment {
-    PROJECT_ID = "YOUR_PROJECT_ID"    // 👈 CHANGE
-    REGISTRY   = "gcr.io/${PROJECT_ID}"
+    PROJECT_ID = "pavan-477919"    // 👈 CHANGE
+    REGISTRY   = "docker.io/pavanyennu"
     TAG        = "${BUILD_NUMBER}"
   }
 
