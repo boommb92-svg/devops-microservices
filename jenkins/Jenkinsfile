@@ -35,6 +35,17 @@ stage('Fetch Sonar Token from GSM') {
 stage('SonarQube Scan') {
   steps {
     sh '''
+    cd docker/backend
+    mvn sonar:sonar \
+      -Dsonar.login=$SONAR_TOKEN \
+      -Dsonar.host.url=http://sonarqube.sonarqube.svc.cluster.local:9000
+
+    cd ../frontend
+    mvn sonar:sonar \
+      -Dsonar.login=$SONAR_TOKEN \
+      -Dsonar.host.url=http://sonarqube.sonarqube.svc.cluster.local:9000
+
+    cd ../payments
     mvn sonar:sonar \
       -Dsonar.login=$SONAR_TOKEN \
       -Dsonar.host.url=http://sonarqube.sonarqube.svc.cluster.local:9000
