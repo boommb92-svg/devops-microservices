@@ -1,0 +1,55 @@
+pipeline {
+  agent any
+
+  environment {
+    PROJECT_ID = "YOUR_PROJECT_ID"    // 👈 CHANGE
+    REGISTRY   = "gcr.io/${PROJECT_ID}"
+    TAG        = "${BUILD_NUMBER}"
+  }
+
+  stages {
+
+    stage('Build') {
+      steps {
+        sh 'mvn clean package'
+      }
+    }
+
+    stage('SonarQube Scan') {
+      steps {
+        withSonarQubeEnv('sonarqube') {
+          sh 'mvn sonar:sonar'
+        }
+      }
+    }
+
+    stage('Docker Build') {
+      steps {
+        sh '''
+        docker build -t ${REGISTRY}/frontend:${TAG} docker/frontend
+        docker build -t ${REGISTRY}/backend:${TAG} docker/backend
+        docker build -t ${REGISTRY}/payments:${TAG} docker/payments
+        '''
+      }
+    }
+
+    stage('Push Images') {
+      steps {
+        sh '''
+        docker push ${REGISTRY}/frontend:${TAG}
+        docker push ${REGISTRY}/backend:${TAG}
+        docker push ${REGISTRY}/payments:${TAG}
+        '''
+      }
+    }
+
+    stage('Helm Deploy') {
+      steps {
+        sh '''
+        helm upgrade --install microservices charts/microservices \
+          --set image.tag=${TAG}
+        '''
+      }
+    }
+  }
+}
