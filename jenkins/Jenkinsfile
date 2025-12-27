@@ -18,15 +18,29 @@ pipeline {
     '''
   }
 }
-
-
-    stage('SonarQube Scan') {
-      steps {
-        withSonarQubeEnv('sonarqube') {
-          sh 'mvn sonar:sonar'
-        }
-      }
+stage('Fetch Sonar Token from GSM') {
+  steps {
+    script {
+      env.SONAR_TOKEN = sh(
+        script: '''
+        gcloud secrets versions access latest \
+          --secret=sonar-token \
+          --project=YOUR_PROJECT_ID
+        ''',
+        returnStdout: true
+      ).trim()
     }
+  }
+}
+stage('SonarQube Scan') {
+  steps {
+    sh '''
+    mvn sonar:sonar \
+      -Dsonar.login=$SONAR_TOKEN \
+      -Dsonar.host.url=http://sonarqube.sonarqube.svc.cluster.local:9000
+    '''
+  }
+}
 
     stage('Docker Build') {
   steps {
