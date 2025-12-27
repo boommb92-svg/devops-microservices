@@ -18,40 +18,7 @@ pipeline {
     '''
   }
 }
-stage('Fetch Sonar Token from GSM') {
-  steps {
-    script {
-      env.SONAR_TOKEN = sh(
-        script: '''
-        gcloud secrets versions access latest \
-          --secret=sonar-token \
-          --project=pavan-477919
-        ''',
-        returnStdout: true
-      ).trim()
-    }
-  }
-}
-stage('SonarQube Scan') {
-  steps {
-    sh '''
-    cd docker/backend
-    mvn sonar:sonar \
-      -Dsonar.login=$SONAR_TOKEN \
-      -Dsonar.host.url=http://sonarqube.sonarqube.svc.cluster.local:9000
 
-    cd ../frontend
-    mvn sonar:sonar \
-      -Dsonar.login=$SONAR_TOKEN \
-      -Dsonar.host.url=http://sonarqube.sonarqube.svc.cluster.local:9000
-
-    cd ../payments
-    mvn sonar:sonar \
-      -Dsonar.login=$SONAR_TOKEN \
-      -Dsonar.host.url=http://sonarqube.sonarqube.svc.cluster.local:9000
-    '''
-  }
-}
 
     stage('Docker Build') {
   steps {
