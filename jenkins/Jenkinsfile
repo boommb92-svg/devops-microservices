@@ -29,14 +29,15 @@ pipeline {
     }
 
     stage('Docker Build') {
-      steps {
-        sh '''
-        docker build -t ${REGISTRY}/frontend:${TAG} docker/frontend
-        docker build -t ${REGISTRY}/backend:${TAG} docker/backend
-        docker build -t ${REGISTRY}/payments:${TAG} docker/payments
-        '''
-      }
-    }
+  steps {
+    sh '''
+    docker build -t ${REGISTRY}/backend:${TAG} docker/backend
+    docker build -t ${REGISTRY}/frontend:${TAG} docker/frontend
+    docker build -t ${REGISTRY}/payments:${TAG} docker/payments
+    '''
+  }
+}
+
 
     stage('Push Images') {
       steps {
