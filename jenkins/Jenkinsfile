@@ -9,6 +9,31 @@ pipeline {
 
   stages {
 
+    stage('Fetch Docker Hub Credentials from GSM') {
+  steps {
+    script {
+      env.DOCKER_USER = sh(
+        script: """
+        gcloud secrets versions access latest \
+          --secret=docker-username \
+          --project=pavan-477919
+        """,
+        returnStdout: true
+      ).trim()
+
+      env.DOCKER_PASS = sh(
+        script: """
+        gcloud secrets versions access latest \
+          --secret=docker-password \
+          --project=pavan-477919
+        """,
+        returnStdout: true
+      ).trim()
+    }
+  }
+}
+
+
    stage('Build') {
   steps {
     sh '''
