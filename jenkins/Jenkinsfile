@@ -25,7 +25,7 @@ stage('Fetch Sonar Token from GSM') {
         script: '''
         gcloud secrets versions access latest \
           --secret=sonar-token \
-          --project=YOUR_PROJECT_ID
+          --project=pavan-477919
         ''',
         returnStdout: true
       ).trim()
