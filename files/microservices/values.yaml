@@ -1,0 +1,14 @@
+image:
+  registry: gcr.io/YOUR_PROJECT_ID
+  tag: latest
+
+replicas:
+  frontend: 2
+  backend: 2
+  payments: 1
+
+service:
+  type: NodePort   # LoadBalancer for GKE
+
+gcp:
+  projectId: YOUR_PROJECT_ID
